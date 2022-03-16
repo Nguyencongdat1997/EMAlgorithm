@@ -1,14 +1,5 @@
 import numpy as np
-
-
-def equal_init():
-    return 0.5, 0.5
-
-def diverge_init():
-    return 0.9, 0.1
-
-def sample_init():
-    return 0.6, 0.5
+from init_funcs import *
 
 
 def em_func(X, init_func=sample_init, converge_threshold=1e-8):
@@ -39,5 +30,6 @@ def em_func(X, init_func=sample_init, converge_threshold=1e-8):
             break
         else:
             theta_A, theta_B = next_theta_A, next_theta_B
+
     return theta_A, theta_B
 
