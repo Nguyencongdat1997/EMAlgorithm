@@ -17,6 +17,7 @@ def random_init(samples):
     num_init = 10
     return np.random.uniform(1e-9, 1.0, size=(num_init,2)).tolist()
 
+
 def greedy_init(samples):
     num_sample = min(10, samples.shape[0])
     X = samples[:num_sample]

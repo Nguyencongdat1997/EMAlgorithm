@@ -25,6 +25,14 @@ class TestEM(unittest.TestCase):
         pred = em_func(self.samples, init_thetas=(0.6, 0.5), converge_threshold=1e-9, converge_steps=10)
         self.assertGreaterEqual(5e-3, abs(pred[0]-0.80)+abs(pred[1]-0.52))
 
+    def test_boundary_value(self):
+        error = False
+        try:
+            pred = em_func(self.samples, init_thetas=(0, 1), converge_threshold=1e-9, converge_steps=10)
+        except Exception:
+            error = True
+        self.assertEqual(error, False)
+
     def test_equal_init(self):
         init_thetas_set = equal_init(self.samples)
         error = False
