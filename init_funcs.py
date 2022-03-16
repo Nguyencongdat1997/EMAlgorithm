@@ -10,7 +10,7 @@ def diverge_init():
 
 
 def sample_init():
-    return 0, 0.5
+    return 0.6, 0.5
 
 
 def random_init():

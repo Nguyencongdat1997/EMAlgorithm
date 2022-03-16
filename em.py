@@ -2,10 +2,11 @@ import numpy as np
 from init_funcs import *
 
 
-def em_func(X, init_func=sample_init, converge_threshold=1e-8):
-    N, M = X.shape # N = 30, M = 10
+def em_func(X, init_func=sample_init, converge_threshold=1e-8, converge_steps=5):
+    N, M = X.shape # N: number of draws, M: number of flips in each draw
 
     theta_A, theta_B = init_func()
+    non_changed_steps = 0
     while True:
         # E-Step
         head_counts = np.sum(X, axis=1)
@@ -27,8 +28,11 @@ def em_func(X, init_func=sample_init, converge_threshold=1e-8):
         # Converge conditions
         if abs(next_theta_A - theta_A) + abs(next_theta_B - theta_B) < converge_threshold:
             theta_A, theta_B = next_theta_A, next_theta_B
-            break
+            non_changed_steps += 1
+            if non_changed_steps >= converge_steps:
+                break
         else:
+            non_changed_steps = 0
             theta_A, theta_B = next_theta_A, next_theta_B
 
     return theta_A, theta_B
