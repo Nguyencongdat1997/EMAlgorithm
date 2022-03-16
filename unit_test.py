@@ -26,51 +26,51 @@ class TestEM(unittest.TestCase):
         self.assertGreaterEqual(5e-3, abs(pred[0]-0.80)+abs(pred[1]-0.52))
 
     def test_equal_init(self):
-        theta_inits = equal_init(self.samples)
+        init_thetas_set = equal_init(self.samples)
         error = False
         try:
-            for theta_init in theta_inits:
-                pred = em_func(self.samples, init_thetas=theta_init)
+            for init_thetas in init_thetas_set:
+                pred = em_func(self.samples, init_thetas=init_thetas)
         except Exception:
             error = True
         self.assertEqual(error, False)
 
     def test_diverge_init(self):
-        theta_inits = diverge_init(self.samples)
+        init_thetas_set = diverge_init(self.samples)
         error = False
         try:
-            for theta_init in theta_inits:
-                pred = em_func(self.samples, init_thetas=theta_init)
+            for init_thetas in init_thetas_set:
+                pred = em_func(self.samples, init_thetas=init_thetas)
         except Exception:
             error = True
         self.assertEqual(error, False)
 
     def test_sample_init(self):
-        theta_inits = sample_init(self.samples)
+        init_thetas_set = sample_init(self.samples)
         error = False
         try:
-            for theta_init in theta_inits:
-                pred = em_func(self.samples, init_thetas=theta_init)
+            for init_thetas in init_thetas_set:
+                pred = em_func(self.samples, init_thetas=init_thetas)
         except Exception:
             error = True
         self.assertEqual(error, False)
 
     def test_random_init(self):
-        theta_inits = random_init(self.samples)
+        init_thetas_set = random_init(self.samples)
         error = False
         try:
-            for theta_init in theta_inits:
-                pred = em_func(self.samples, init_thetas=theta_init)
+            for init_thetas in init_thetas_set:
+                pred = em_func(self.samples, init_thetas=init_thetas)
         except Exception:
             error = True
         self.assertEqual(error, False)
 
     def test_greedy_init(self):
-        theta_inits = greedy_init(self.samples)
+        init_thetas_set = greedy_init(self.samples)
         error = False
         try:
-            for theta_init in theta_inits:
-                pred = em_func(self.samples, init_thetas=theta_init)
+            for init_thetas in init_thetas_set:
+                pred = em_func(self.samples, init_thetas=init_thetas)
         except Exception:
             error = True
         self.assertEqual(error, False)

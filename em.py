@@ -1,13 +1,18 @@
 import numpy as np
+from sklearn.cluster import KMeans
+
 from init_funcs import *
 
 
-def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5):
+def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5, max_steps=10000):
     N, M = X.shape # N: number of draws, M: number of flips in each draw
 
     theta_A, theta_B = init_thetas if init_thetas else sample_init()[0]
     non_changed_steps = 0
+    steps = 0
     while True:
+        steps += 1
+
         # E-Step
         head_counts = np.sum(X, axis=1)
         tail_counts = M - head_counts
@@ -15,7 +20,6 @@ def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5):
         prob_X_given_B = np.power(theta_B, head_counts) * np.power(1 - theta_B, tail_counts)
         gamma_A = prob_X_given_A / (prob_X_given_A + prob_X_given_B)
         gamma_B = 1 - gamma_A
-
         weighted_head_A = np.sum(gamma_A * head_counts)
         weighted_tail_A = np.sum(gamma_A * tail_counts)
         weighted_head_B = np.sum(gamma_B * head_counts)
@@ -29,13 +33,32 @@ def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5):
         if abs(next_theta_A - theta_A) + abs(next_theta_B - theta_B) < converge_threshold:
             theta_A, theta_B = next_theta_A, next_theta_B
             non_changed_steps += 1
-            if non_changed_steps >= converge_steps:
+            if non_changed_steps >= converge_steps or steps >= max_steps:
                 break
         else:
             non_changed_steps = 0
             theta_A, theta_B = next_theta_A, next_theta_B
 
-    return theta_A, theta_B
+    return sorted([theta_A, theta_B], reverse=True)
 
-def multi_em_func(X, init_func, converge_threshold=1e-8, converge_steps=5):
-    pass
+
+def multi_em_func(X, init_func, converge_threshold=1e-8, converge_steps=5, max_steps=10000):
+    init_thetas_set = init_func(X)
+    predicted_thetas_set = []
+
+    # Get predicted thetas
+    for init_theta in init_thetas_set:
+        predicted_thetas_set.append(em_func(X,
+                                            init_thetas=init_theta,
+                                            converge_threshold=converge_threshold,
+                                            converge_steps=converge_steps,
+                                            max_steps=max_steps)
+                                    )
+
+    # Cluster thetas into groups, and pick the most common group to return
+    predicted_thetas_set = np.array(predicted_thetas_set)
+    kmeans = KMeans(n_clusters=3, random_state=0, init='k-means++').fit(predicted_thetas_set)
+    most_common_cluster_idx = max(set(kmeans.labels_.tolist()), key = kmeans.labels_.tolist().count)
+    most_common_cluster = predicted_thetas_set[kmeans.labels_==most_common_cluster_idx]
+
+    return np.mean(most_common_cluster, axis=0)
