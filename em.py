@@ -2,10 +2,10 @@ import numpy as np
 from init_funcs import *
 
 
-def em_func(X, init_func=sample_init, converge_threshold=1e-8, converge_steps=5):
+def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5):
     N, M = X.shape # N: number of draws, M: number of flips in each draw
 
-    theta_A, theta_B = init_func()
+    theta_A, theta_B = init_thetas if init_thetas else sample_init()[0]
     non_changed_steps = 0
     while True:
         # E-Step
@@ -37,3 +37,5 @@ def em_func(X, init_func=sample_init, converge_threshold=1e-8, converge_steps=5)
 
     return theta_A, theta_B
 
+def multi_em_func(X, init_func, converge_threshold=1e-8, converge_steps=5):
+    pass
