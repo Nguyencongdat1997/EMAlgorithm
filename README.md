@@ -3,6 +3,8 @@
 A project using EM algorithm to estimate parameters of Two Coins Flipping problem.
 The description of problem can be found in <a href="https://ra-training.s3-us-west-1.amazonaws.com/DoBatzoglou_2008_EMAlgo.pdf"> this article </a>.
 
+The result report is given in __documents/report.pdf__
+
 ## Project structure:
  - main.py: running the whole pipeline: crawling data, estimating parameters, representing the results.
  - algorithms.py: storing functions of EM algorithms.
