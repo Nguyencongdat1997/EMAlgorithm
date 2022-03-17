@@ -1,6 +1,5 @@
 import numpy as np
-from em import *
-from init_funcs import *
+from algorithms import *
 
 
 def create_data():
@@ -43,7 +42,7 @@ def evaluate(param, num_try=10):
 
 if __name__ == '__main__':
     print('Initializing params...')
-    init_func_list = [random_init, diverge_init, equal_init]
+    init_func_list = [random_init, diverge_init, equal_init, greedy_init]
     converge_threshold_list = [1e-5, 1e-10]
     converge_steps_list = [10, 15, 20]
     param_list = []

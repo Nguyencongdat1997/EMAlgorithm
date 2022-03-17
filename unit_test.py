@@ -2,8 +2,7 @@ import numpy as np
 import unittest
 import sys
 
-from em import em_func
-from init_funcs import *
+from algorithms import *
 
 
 class TestEM(unittest.TestCase):

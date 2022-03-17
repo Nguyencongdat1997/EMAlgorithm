@@ -3,8 +3,6 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
 import warnings
 
-from init_funcs import *
-
 
 def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5, max_steps=1000):
     N, M = X.shape # N: number of draws, M: number of flips in each draw
@@ -68,3 +66,44 @@ def multi_em_func(X, init_func, converge_threshold=1e-8, converge_steps=5, max_s
         most_common_cluster_idx = max(set(kmeans.labels_.tolist()), key = kmeans.labels_.tolist().count)
     closest, _ = pairwise_distances_argmin_min(kmeans.cluster_centers_, predicted_thetas_set)
     return predicted_thetas_set[closest[most_common_cluster_idx]]
+
+
+def equal_init(samples):
+    return [(0.5, 0.5)]
+
+
+def diverge_init(samples):
+    return [(0.9, 0.1)]
+
+
+def sample_init(samples):
+    return [(0.6, 0.5)]
+
+
+def random_init(samples):
+    num_init = 10
+    return np.random.uniform(1e-9, 1.0, size=(num_init,2)).tolist()
+
+
+def greedy_init(samples):
+    num_sample = min(8, samples.shape[0])
+    X = samples[:num_sample]
+    head_counts = np.sum(X, axis=1)
+    tail_counts = X.shape[1] - head_counts
+    thetas = []
+
+    for i in range(2**num_sample):
+        binary_i = ('{0:0'+str(num_sample)+'b}').format(i)
+        coin_choice = np.array([int(x) for x in binary_i])
+
+        head_counts_A = np.sum(coin_choice * head_counts) + 1 # add-one smoothing
+        tail_counts_A = np.sum(coin_choice * tail_counts) + 1
+        head_counts_B = np.sum((1-coin_choice) * head_counts) + 1
+        tail_counts_B = np.sum((1-coin_choice) * tail_counts) + 1
+
+        theta_A = head_counts_A / (head_counts_A + tail_counts_A)
+        theta_B = head_counts_B / (head_counts_B + tail_counts_B)
+
+        thetas.append((theta_A, theta_B))
+
+    return thetas
