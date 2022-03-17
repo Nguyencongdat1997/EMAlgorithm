@@ -24,12 +24,18 @@ def error_score(predict_thetas, ground_truth_thetas):
         Calculate the difference between predicted thetas and their ground truth values
     :param predict_thetas: predicted thetas. Type: tuple of (theta_A, theta_B)
     :param ground_truth_thetas: ground truth thetas. Type: tuple of (theta_A, theta_B)
-    :return: difference. Type: int
+    :return: difference. Type: float
     """
     return min(abs(predict_thetas[0] - ground_truth_thetas[0])+abs(predict_thetas[1]-ground_truth_thetas[1]),
                abs(predict_thetas[1] - ground_truth_thetas[0])+abs(predict_thetas[0]-ground_truth_thetas[1]))
 
 def evaluate(param, num_try=10):
+    """
+        Run multiple trials to get the average score of using given set of param.
+    :param param: Given parameters. Type: a dict, includes {'init_func', 'converge_threshold', 'converge_steps}
+    :param num_try: Number of trials
+    :return: The average score of error.
+    """
     total_error_score = 0
     for i in range(num_try):
         samples, ground_truth_theta = create_data()

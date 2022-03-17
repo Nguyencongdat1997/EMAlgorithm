@@ -5,6 +5,15 @@ import warnings
 
 
 def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5, max_steps=1000):
+    """
+        EM algorithm
+    :param X: sample data. Type: A tensor with shape (number_of_draws, number_of_flip_in_each_draw)
+    :param init_thetas: Initialization of theta_A and theta_B. Type: a tuple of (init_theta_A, init_theta_B)
+    :param converge_threshold: The threshold to decide if there is param updates in each EM iteration or not. Type: float
+    :param converge_steps: Number of steps without param updates to try before terminate the process. Type: int
+    :param max_steps: Maximum number of steps to run. Type: int
+    :return: A tuple of estimated (theta_A, theta_B)
+    """
     N, M = X.shape # N: number of draws, M: number of flips in each draw
 
     theta_A, theta_B = init_thetas if init_thetas else sample_init()[0]
@@ -46,6 +55,15 @@ def em_func(X, init_thetas=None, converge_threshold=1e-8, converge_steps=5, max_
 
 
 def multi_em_func(X, init_func, converge_threshold=1e-8, converge_steps=5, max_steps=1000):
+    """
+        Running EM algorithm multiple times with different sets of initialization.
+    :param X: sample data. Type: A tensor with shape (number_of_draws, number_of_flip_in_each_draw)
+    :param init_func: Function from which sets of param are initialized.
+    :param converge_threshold: The threshold to decide if there is param updates in each EM iteration or not. Type: float
+    :param converge_steps: Number of steps without param updates to try before terminate the process. Type: int
+    :param max_steps: Maximum number of steps to run. Type: int
+    :return: The best estimated tuple of (theta_A, theta_B).
+    """
     init_thetas_set = init_func(X)
     predicted_thetas_set = []
 

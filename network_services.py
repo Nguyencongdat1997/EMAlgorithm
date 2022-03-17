@@ -10,6 +10,10 @@ class APIConnector(object):
         return data.get(attribute) or default_value
 
     def get_one_draw(self):
+        """
+            Call API and get one draw
+        :return: A list of 20 flips.
+        """
         response = requests.get(url=self.url)
 
         flips = json.loads(self.get_json_attribute(response.json(), 'body', '[-1]').encode('utf-8'))
